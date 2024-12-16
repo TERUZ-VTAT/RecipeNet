@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block title %}
+{{ profile_user.account_name }}/プロフィール
+{% endblock %}
+
+{% block head %}
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/accounts/profile.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'css/card.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="top">
+    <img src="{{ profile_user.avatar.url }}" alt="profile-image" class="profile-img">
+    <div class="names">
+        <span id="account-name">{{ profile_user.account_name }}</span>
+        <span id="account-id">ID: {{ profile_user.account_id }}</span>
+    </div>
+    <a class="edit-button" href="{% url 'accounts:profile-edit' %}">
+        <img src="{% static 'images/profile/edit.svg' %}" alt="">
+    </a>
+</div>
+
+<span class="middle mt-4 d-block">投稿したレシピ</span>
+<div class="cards">
+    {% for recipe in recipies %}
+    <div class="recipe-card">
+        <a href="{% url 'recipeApp:show' %}?id={{ recipe.recipe_code }}">
+            <div class="recipe-img">
+                <img src="{% if recipe.recipe_image %}{{ recipe.recipe_image.url }}{% else %}{% static 'images/defaults/thumbnail.png' %}{% endif %}" alt="">
+            </div>
+            <div class="recipe-detail">
+                <span class="recipe-title">{{ recipe.title }}</span>
+            </div>
+        </a>
+        <form action="{% url 'recipeApp:favorite' %}?id={{ recipe.recipe_code }}&next={% url 'accounts:profile' %}?id={{ profile_user.account_id }}" method="post">
+            {% csrf_token %}
+            <button class="assesments">
+                <img src="{% if recipe.id in my_favorite %}{% static 'images/recipe/favorite.svg' %}{% else %}{% static 'images/recipe/not-favorite.svg' %}{% endif %}" alt="">
+                <span>{{ recipe.favorite_count }}</span>
+            </button>
+        </form>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

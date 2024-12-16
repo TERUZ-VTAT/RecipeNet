@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/base.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/shortcut.css' %}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="shortcut icon" type="image/png" href="{% static 'images/favicon.ico' %}" />
+    {% block head %}{% endblock %}
+    <title>{% block title %}{% endblock %} - RecipeNet</title>
+</head>
+
+<body>
+    <button class="btn btn-light rounded-circle p-2 shadow m-3 border zi-10 position-fixed" onclick="ShowMenu()">
+        <img src="{% static 'images/menu.svg' %}" alt="">
+    </button>
+    <div id="menus">
+        <div id="menu-background" onclick="HideMenu()"></div>
+        <div id="menu">
+            <a class="menu-title" href="{% url 'index' %}" tabindex="-1">
+                <img src="{% static 'images/RecipeNet.png' %}" alt="">
+                <span>RecipeNet</span>
+            </a>
+            <hr>
+            <div class="links">
+                <a href="{% url 'index' %}" class="rounded" tabindex="-1">
+                    <span>トップ</span>
+                </a>
+                <a href="{% url 'recipeApp:find' %}" class="rounded" tabindex="-1">
+                    <span>レシピを探す</span>
+                </a>
+                <a href="{% url 'recipeApp:my-recipe' %}" class="rounded" tabindex="-1">
+                    <span>マイレシピ</span>
+                </a>
+            </div>
+            <hr class="mt-auto">
+            <a class="menu-profiles" href="{% if user.is_authenticated %}{% url 'accounts:profile' %}?id={{ user.account_id }}{% else %}{% url 'accounts:login' %}{% endif %}">
+                <img src="{% if user.is_authenticated %}{{ user.avatar.url }}{% else %}{% static 'images/noLoginAvatar.png' %}{% endif %}" alt="profile-image" class="menu-avatar">
+                <span class="menu-user-name">{% if user.is_authenticated %}{{ user.account_name }}{% else %}ログイン{% endif %}</span>
+            </a>
+        </div>
+    </div>
+    <div class="p-5" id="base-body">
+        {% block content %}{% endblock %}
+    </div>
+
+    <script>
+        menus = document.querySelector("#menus");
+        menuBackground = document.querySelector("#menu-background");
+        menu = document.querySelector("#menu");
+        links = document.querySelectorAll("#menu a");
+
+        function ShowMenu() {
+            menus.className = "menus-activate";
+            menuBackground.className = "menu-background-show";
+            menu.className = "menu-open";
+            links.forEach(element => {
+                element.setAttribute("tabindex", "");
+            });
+        }
+
+        function HideMenu() {
+            menus.className = "";
+            menuBackground.className = "";
+            menu.className = "";
+            links.forEach(element => {
+                element.setAttribute("tabindex", "-1");
+            });
+        }
+    </script>
+</body>
+
+</html>

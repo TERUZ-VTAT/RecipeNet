@@ -1,0 +1,153 @@
+
+
+header {
+    position: fixed;
+    /* background-color: #999;
+    height: 4.5rem;
+    width: 100%; */
+}
+
+#base-body {
+    position: relative;
+}
+
+#menus {
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    z-index: 100;
+}
+
+.menus-activate {
+    pointer-events: auto !important;
+}
+
+#menu-background {
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    transition: all 0.3s;
+    opacity: 0;
+}
+
+.menu-background-show {
+    opacity: 1 !important;
+}
+
+#menu {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    width: 20rem;
+    height: 100%;
+    background-color: ghostwhite;
+    z-index: 1;
+    top: 0;
+    left: -20rem;
+    transition: all 0.3s;
+}
+
+.menu-open {
+    left: 0 !important;
+}
+
+#menu hr {
+    margin: 0;
+    width: 95%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.menu-title {
+    position: relative;
+    display: flex;
+    align-items: center;
+    height: 5rem;
+    padding: 0.5rem;
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.menu-title:hover {
+    background-color: lightgray;
+}
+
+.menu-title img {
+    height: 100%;
+}
+
+.menu-title span {
+    margin-left: 0.5rem;
+    font-size: 2.35rem;
+    font-weight: 500;
+}
+
+.links {
+    width: 100%;
+    height: auto;
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.links a {
+    width: 95%;
+    height: 4rem;
+    display: flex;
+    align-items: center;
+    transition: all 0.1s;
+    font-size: 1.5rem;
+    /* margin-bottom: 0.2rem; */
+    padding: 0.5rem;
+}
+
+.links a:hover {
+    background-color: #ccc;
+}
+
+a:hover {
+    cursor: pointer !important;
+}
+
+.zi-10 {
+    z-index: 10;
+}
+
+.menu-profiles {
+    width: 100%;
+    height: 5rem;
+    display: flex;
+    /* justify-content: center; */
+    align-items: center;
+    padding: 1rem;
+    transition: all 0.2s;
+    color: gray;
+    text-decoration: none;
+}
+
+.menu-avatar {
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    background-color: white;
+    box-shadow: lightgray 0.1rem 0.1rem 0.3rem 0px;
+}
+
+.menu-user-name {
+    margin-left: 0.5rem;
+    font-size: 1.8rem;
+    font-weight: bold;
+    white-space: nowrap; /* 折り返し無しにする */
+    overflow: hidden; /* はみ出た部分を非表示 */
+    text-overflow: ellipsis; /* 語尾を3点リーダーに */
+}
+
+.menu-profiles:hover {
+    background-color: lightgray;
+    color: black;
+}

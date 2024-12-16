@@ -1,0 +1,118 @@
+{% extends 'base.html' %}
+
+{% block head %}
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/recipe/my_recipe.css' %}">
+{% endblock %}
+
+{% block title %}マイレシピ{% endblock %}
+
+{% block content %}
+<div id="setting-overlays" class="hide">
+    <div id="setting-background"></div>
+    <div id="setting-window">
+        <iframe src=""></iframe>
+        <button id="setting-close-button" onclick="HideSetting()" tabindex="-1">
+            <img src="{% static 'images/recipe/close.svg' %}" alt="close">
+        </button>
+        <img src="{% static 'images/recipe/loop.gif' %}" alt="" class="loading">
+    </div>
+</div>
+<div class="titles">
+    <h1>マイレシピ</h1>
+    <a href="{% url 'recipeApp:create' %}" class="btn btn-primary new">新規</a>
+</div>
+<ul>
+    {% for recipe in recipies %}
+    <li class="rounded">
+        <a href="{% url 'recipeApp:edit' %}?id={{recipe.recipe_code}}" class="py-2 pe-0 ps-3" type="link">
+            <div>
+                <h2>{{ recipe.title }}</h2>
+                <p class="trans">レシピコード: {{ recipe.recipe_code }}</p>
+            </div>
+            <div id="datetime_data" class="ms-auto d-flex flex-column">
+                <p class="m-0 mt-auto trans">作成日: {{ recipe.created_at }}</p>
+                <p class="m-0 trans">更新日: {{ recipe.updated_at }}</p>
+            </div>
+        </a>
+        <a class="my-auto p-1 full-trans mx-2 rounded c-pointer more-button" onclick="ShowDropdown(this, `{{recipe.recipe_code}}`)">
+            <img src="{% static 'images/recipe/more_horiz.svg' %}" alt="more" class="pe-none">
+        </a>
+    </li>
+    {% endfor %}
+</ul>
+<div id="custom-context-menu" class="dropdown-menu pe-none" style="display: block; opacity: 0; top: 0;">
+    <!-- <a class="dropdown-item c-pointer" tabindex="-1">名称を変更</a> -->
+    <a class="dropdown-item c-pointer" tabindex="-1" href="" id="edit-button">編集</a>
+    <a class="dropdown-item c-pointer" tabindex="-1">リンクをコピー</a>
+    <hr class="my-1">
+    <a class="dropdown-item c-pointer" tabindex="-1" id="setting-button">設定</a>
+    <hr class="my-1">
+    <a class="dropdown-item c-pointer text-danger" tabindex="-1">削除</a>
+</div>
+
+<script>
+    const triggerButtons = document.querySelectorAll(".more-button");
+    const contextMenu = document.getElementById("custom-context-menu");
+
+    function ShowDropdown(currentButton, recipe_code) {
+        event.preventDefault();
+
+        redirect_url = `{% url 'recipeApp:edit' %}?id=${recipe_code}`;
+
+        // thisを使用してクリックされたボタンの位置を取得
+        const rect = currentButton.getBoundingClientRect();
+        const menuRect = contextMenu.getBoundingClientRect();
+        contextMenu.style.left = `${rect.right-menuRect.width}px`;
+        contextMenu.style.top = `${rect.bottom + window.scrollY}px`;
+
+        // ボタンを有効化
+        contextMenu.querySelectorAll("a").forEach(element => {
+            element.setAttribute("tabindex", "");
+        });
+        contextMenu.className = "dropdown-menu";
+        // リンクを設定
+        document.querySelector("#edit-button").href = redirect_url;
+        document.querySelector("#setting-button").setAttribute("onclick", `ShowSetting('${recipe_code}')`);
+        // メニューを表示
+        contextMenu.style.opacity = "1";
+    }
+
+    function HideDropdown() {
+        // ボタンを無効化
+        contextMenu.querySelectorAll("a").forEach(element => {
+            element.setAttribute("tabindex", "-1");
+        });
+        contextMenu.className = "dropdown-menu pe-none";
+        // メニューを非表示
+        contextMenu.style.opacity = "0";
+    }
+
+    // メニュー外をクリックしたときに非表示にする
+    document.addEventListener("click", function (event) {
+        if (!contextMenu.contains(event.target) && !event.target.classList.contains("more-button")) {
+            HideDropdown();
+        }
+    });
+
+    function CopyLink(link) {
+        navigator.clipboard.writeText(link);
+    }
+
+    setting_overlays = document.getElementById("setting-overlays");
+    setting_close_button = document.getElementById("setting-close-button");
+    iframe = document.querySelector("#setting-window iframe");
+    function ShowSetting(recipe_code) {
+        HideDropdown();
+        iframe.setAttribute("src", `{% url 'recipeApp:setting' %}?id=${recipe_code}`);
+        setting_overlays.className = "show";
+        setting_close_button.setAttribute("tabindex", "");
+    }
+
+    function HideSetting() {
+        setting_overlays.className = "hide";
+        iframe.setAttribute("src", ``);
+        setting_close_button.setAttribute("tabindex", "-1");
+    }
+</script>
+{% endblock %}

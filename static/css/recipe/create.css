@@ -1,0 +1,61 @@
+textarea[type="text"] {
+    border: none;
+    outline: none;
+    background-color: transparent;
+    border-bottom : 2px solid #999;
+    resize: none;
+    field-sizing: content;
+    height: min-content;
+    transition: all 0.2s;
+    min-width: 10rem;
+}
+
+textarea[type="text"]:focus{
+    border-bottom: 2px solid #000;
+}
+
+.title{
+    font-size: 2.5rem;
+    /* padding: 5px 10px; */
+    /* padding: 2px; */
+    min-width: 40% !important;
+    max-width: 70%;
+}
+
+.setting-button {
+    transition: all 0.1s;
+}
+
+.setting-button:hover {
+    background-color: #ccc;
+}
+
+.delete-button {
+    /* aspect-ratio: 1/1; */
+    /* height: auto; */
+    height: min-content;
+    opacity: 0;
+    transition: all 0.1s;
+}
+
+.delete-button:hover {
+    background-color: #bbb;
+}
+
+.section {
+    transition: all 0.1s;
+}
+
+.section:hover {
+    background-color: #ddd;
+}
+
+.section:hover .delete-button {
+    opacity: 1;
+}
+
+.detail {
+    resize: none;
+    width: 80%;
+    height: 15rem;
+}

@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+
+{% block title %}レシピ詳細{% endblock %}
+
+{% block head %}
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/recipe/show_recipe.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="titles">
+    <span class="title">{{ recipe.title }}</span>
+
+    <form action="{% url 'recipeApp:favorite' %}?id={{ recipe.recipe_code }}&next={% url 'recipeApp:show' %}?id={{ recipe.recipe_code }}" method="post" id="favorite-form">
+        {% csrf_token %}
+        <button id="favorite-button">
+            <img src="{% if is_favorite %}{% static 'images/recipe/favorite.svg' %}{% else %}{% static 'images/recipe/not-favorite.svg' %}{% endif %}" alt="" width="36px">
+            <span>{{ favorite_count }}</span>
+        </button>
+    </form>
+</div>
+
+<h2>材料</h2>
+<dl class="ingredients">
+    {% if ingredients %}
+    {% for ingredient in ingredients %}
+    <button class="ingredient" onclick="changeCheck(this)">
+        <div class="check" name="check">
+            <img src="{% static 'images/recipe/check.svg' %}" alt="">
+            <div class="line"></div>
+        </div>
+        <dt>{{ ingredient.name }}</dt>
+        <dd>{{ ingredient.amount }}</dd>
+    </button>
+    {% endfor %}
+    {% else %}
+    このレシピには材料情報がありません(´・ω・｀)
+    {% endif %}
+</dl>
+
+<h2>手順</h2>
+<ol class="sections">
+    {% if sections %}
+    {% for section in sections %}
+    <li class="section">
+        <button onclick="toggleLine(this)">
+            <span>{{ section.detail }}</span>
+        </button>
+    </li>
+    {% endfor %}
+    {% else %}
+    このレシピには手順がありません(´・ω・｀)
+    {% endif %}
+</ol>
+
+<script>
+    function changeCheck(thisElement) {
+        console.log("test");
+        if (thisElement.classList.contains("checked")) {
+            console.log("change")
+            thisElement.classList.remove("checked");
+        } else {
+            thisElement.classList.add("checked");
+        }
+    }
+
+    function toggleLine(thisElement) {
+        if (thisElement.classList.contains("complete")) {
+            thisElement.classList.remove("complete");
+        } else {
+            thisElement.classList.add("complete");
+        }
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,161 @@
+{% extends 'base.html' %}
+
+{% block head %}
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/recipe/create.css' %}">
+{% endblock %}
+
+{% block title %}レシピ投稿{% endblock %}
+
+{% block content %}
+<form action="" method="post" name="mainForm">
+    {% csrf_token %}
+    <div class="d-flex">
+        <!-- <h1 class="fs-1">レシピを作成</h1> -->
+        <textarea name="title" id="id_title" class="title" type="text" placeholder="料理名" onkeydown="ActivateSaveButton()">{{ title }}</textarea>
+        <div class="d-flex ms-auto height-min">
+            <!-- <a class="my-auto me-3 setting-button p-2 rounded-circle c-pointer">  TODO: レシピの公開設定などの設定画面が表示されるようにする
+                <img src="{% static 'images/recipe/settings.svg' %}" alt="settings">
+            </a> -->
+            <input type="button" value="保存済み" class="btn btn-secondary height-min fs-5" id="save" onclick="SendForm()">
+        </div>
+    </div>
+    <hr>
+    <h3>概要</h3>
+    <textarea name="detail" id="id_detail" class="detail" placeholder="概要を入力...
+    例: 料理の説明, 使用器具, 予想調理時間など" onkeydown="ActivateSaveButton()">{{ detail }}</textarea>
+    <div class="d-flex">
+        <h3>材料</h3>
+        <input type="button" onclick="AddIngredientSection()" value="材料を追加" class="ms-auto btn btn-primary">
+    </div>
+    <ul id="ingredients" class="pt-3">
+        {% for ingredient in ingredients %}
+        <li>
+            <div class="d-flex p-1 rounded section">
+                <textarea name="ingredients_name" id="id_ingredients_name" placeholder="材料名" type="text" onkeydown="ActivateSaveButton()">{{ ingredient.0 }}</textarea>
+                <textarea name="ingredients_amount" id="id_ingredients_amount" placeholder="数量" type="text" onkeydown="ActivateSaveButton()" class="ms-3">{{ ingredient.1 }}</textarea>
+                <a onclick="DeleteSection(this)" class="c-pointer ms-auto p-1 rounded delete-button">
+                    <img src="{% static 'images/recipe/delete.svg' %}">
+                </a>
+            </div>
+        </li>
+        {% endfor %}
+    </ul>
+    <hr>
+    <div class="d-flex">
+        <h3>手順</h3>
+        <input type="button" onclick="AddSection()" value="手順を追加" class="ms-auto btn btn-primary">
+    </div>
+    <ol id="sections" class="pt-3">
+        {% for section in sections %}
+        <li>
+            <div class="d-flex p-1 rounded section">
+                <textarea name="section_detail" id="id_section_detail" placeholder="手順を入力..." type="text" onkeydown="ActivateSaveButton()">{{ section.0 }}</textarea>
+                <a onclick="DeleteSection(this)" class="c-pointer ms-auto p-1 rounded delete-button">
+                    <img src="{% static 'images/recipe/delete.svg' %}">
+                </a>
+            </div>
+        </li>
+        {% endfor %}
+    </ol>
+</form>
+
+
+<script>
+    ingredients = document.querySelector("#ingredients");
+    sections = document.querySelector("#sections");
+    form = document.forms.mainForm;
+
+    function AddIngredientSection() {
+        // li
+        new_ingredient_li = document.createElement("li");
+        // div
+        new_ingredient = document.createElement("div");
+        new_ingredient.className += "d-flex p-1 rounded section";
+        // input1
+        ingredients_name_input = document.createElement("textarea");
+        ingredients_name_input.id = "id_ingredients_name";
+        ingredients_name_input.name = "ingredients_name";
+        ingredients_name_input.placeholder = "材料名";
+        ingredients_name_input.setAttribute("type", "text");
+        new_ingredient.appendChild(ingredients_name_input);
+        // input2
+        ingredients_amount_input = document.createElement("textarea");
+        ingredients_amount_input.id = "id_ingredients_amount";
+        ingredients_amount_input.name = "ingredients_amount";
+        ingredients_amount_input.placeholder = "数量";
+        ingredients_amount_input.setAttribute("type", "text");
+        ingredients_amount_input.className += "ms-3";
+        new_ingredient.appendChild(ingredients_amount_input);
+        // delete button
+        delete_button = document.createElement("a");
+        delete_button.onclick = DeleteSection; // なぜかデバッグツールで見たら反映されないが、機能する。
+        delete_button.className += "c-pointer ms-auto p-1 rounded delete-button";
+        new_ingredient.appendChild(delete_button);
+        // delete icon
+        delete_icon = document.createElement("img");
+        delete_icon.src = "{% static 'images/recipe/delete.svg' %}";
+        delete_button.appendChild(delete_icon);
+        // 追加
+        new_ingredient_li.appendChild(new_ingredient);
+        ingredients.appendChild(new_ingredient_li);
+        ActivateSaveButton();
+    }
+
+    function AddSection() {
+        new_section_li = document.createElement("li");
+
+        new_section = document.createElement("div");
+        new_section.className += "d-flex p-1 rounded section";
+
+        section_input = document.createElement("textarea");
+        section_input.id = "id_section_detail";
+        section_input.name = "section_detail";
+        section_input.placeholder = "手順を入力...";
+        section_input.setAttribute("type", "text");
+        new_section.appendChild(section_input);
+
+        // delete button
+        delete_button = document.createElement("a");
+        delete_button.onclick = DeleteSection;
+        delete_button.className += "c-pointer ms-auto p-1 rounded delete-button";
+        new_section.appendChild(delete_button);
+        // delete icon
+        delete_icon = document.createElement("img");
+        delete_icon.src = "{% static 'images/recipe/delete.svg' %}";
+        delete_button.appendChild(delete_icon);
+
+        new_section_li.appendChild(new_section)
+        sections.appendChild(new_section_li);
+
+        ActivateSaveButton()
+    }
+
+    function DeleteSection(currentElement=null) {
+        try {
+            currentElement.parentElement.parentElement.remove();
+        }
+        catch(err) {
+            this.parentElement.parentElement.remove();
+        }
+        ActivateSaveButton();
+    }
+
+    function ActivateSaveButton() {
+        saveButton = document.querySelector("#save");
+        saveButton.classList.replace("btn-secondary", "btn-warning");
+        saveButton.value = "保存";
+        window.onbeforeunload = beforeUnload;
+    }
+
+    function beforeUnload(event){
+        event.preventDefault();
+        event.returnValue = 'Check';
+    }
+
+    function SendForm() {
+        window.onbeforeunload = null;
+        form.submit()
+    }
+</script>
+{% endblock %}

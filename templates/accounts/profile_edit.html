@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+
+{% block title %}
+プロフィール編集
+{% endblock %}
+
+{% block head %}
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/accounts/profile_edit.css' %}">
+{% endblock %}
+
+{% block content %}
+{% load widget_tweaks %}
+<form action="" method="post" enctype="multipart/form-data" name="mainForm">
+    {% csrf_token %}
+    <h1>アイコン</h1>
+    <div class="avatars">
+        <img src="{{ user.avatar.url }}" alt="profile-image" class="avatar" id="avatar-preview">
+        <div class="edit">
+            <input type="file" accept="image/*" class="file-select" name="{{ form.avatar.name }}" id="{{ form.avatar.id_for_label }}" onchange="ActivateSaveButton()">
+            <img src="{% static 'images/profile/edit-white.svg' %}" alt="">
+        </div>
+    </div>
+    <hr>
+    <label for="id_account_name"><h1>表示名:</h1></label>
+    <br>
+    {% render_field form.account_name onkeydown="ActivateSaveButton()" %}
+    <br>
+    <label for="id_account_id"><h1>ID:</h1></label>
+    <br>
+    {% render_field form.account_id onkeydown="ActivateSaveButton()" %}
+    <input type="button" value="保存済み" class="btn btn-secondary m-5 save-button" id="save" onclick="SendForm()">
+</form>
+
+{% if form.errors %}
+    <ul>
+        {% for field, errors in form.errors.items %}
+            <li>{{ field }}:
+                <ul>
+                    {% for error in errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            </li>
+        {% endfor %}
+    </ul>
+{% endif %}
+
+<script>
+    form = document.forms.mainForm;
+
+    function ActivateSaveButton() {
+        saveButton = document.querySelector("#save");
+        saveButton.classList.replace("btn-secondary", "btn-warning");
+        saveButton.value = "保存";
+        window.onbeforeunload = beforeUnload;
+    }
+
+    function beforeUnload(event){
+        event.preventDefault();
+        event.returnValue = 'Check';
+    }
+
+    function SendForm() {
+        window.onbeforeunload = null;
+        form.submit()
+    }
+</script>
+{% endblock %}

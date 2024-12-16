@@ -11,10 +11,11 @@
 
 .avatar {
     height: 20rem;
-    height: 20rem;
+    width: 20rem;
     border: 0.1rem black solid;
     background-color: white;
     border-radius: 50%;
+    object-fit: cover;
     box-shadow: lightgray 0.2rem 0.2rem 0.8rem 0px;
 }
 

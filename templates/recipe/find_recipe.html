@@ -9,7 +9,13 @@
 {% endblock %}
 
 {% block content %}
-<h1>人気のレシピ</h1>
+<form action="{% url 'recipeApp:find-result' %}" method="post" id="find-form">
+    {% csrf_token %}
+    <img src="{% static 'images/recipe/search.svg' %}" alt="">
+    <input type="text" name="q" placeholder="検索..." id="query-area" onkeydown="if(event.key==='Enter'){event.preventDefault(); submitFindForm();}">
+</form>
+
+<h1 class="theme-color">人気のレシピ</h1>
 <div id="top" class="cards">
     {% for recipe in top %}
     <div class="recipe-card">
@@ -21,7 +27,7 @@
                 <span class="recipe-title">{{ recipe.title }}</span>
             </div>
         </a>
-        <form action="{% url 'recipeApp:favorite' %}?id={{ recipe.recipe_code }}&next={% url 'recipeApp:find' %}" method="post">
+        <form action="{% url 'recipeApp:favorite' %}?id={{ recipe.recipe_code }}&next={% url 'recipeApp:index' %}" method="post">
             {% csrf_token %}
             <button class="assesments">
                 <img src="{% if recipe.id in my_favorite %}{% static 'images/recipe/favorite.svg' %}{% else %}{% static 'images/recipe/not-favorite.svg' %}{% endif %}" alt="">
@@ -34,7 +40,7 @@
 
 <!-- <h1>急上昇</h1> -->
 
-<h1>新着</h1>
+<h1 class="theme-color">新着</h1>
 <div id="new" class="cards">
     {% for recipe in new %}
     <div class="recipe-card">
@@ -46,7 +52,7 @@
                 <span class="recipe-title">{{ recipe.title }}</span>
             </div>
         </a>
-        <form action="{% url 'recipeApp:favorite' %}?id={{ recipe.recipe_code }}&next={% url 'recipeApp:find' %}" method="post">
+        <form action="{% url 'recipeApp:favorite' %}?id={{ recipe.recipe_code }}&next={% url 'recipeApp:index' %}" method="post">
             {% csrf_token %}
             <button class="assesments">
                 <img src="{% if recipe.id in my_favorite %}{% static 'images/recipe/favorite.svg' %}{% else %}{% static 'images/recipe/not-favorite.svg' %}{% endif %}" alt="">
@@ -58,4 +64,13 @@
 </div>
 
 <!-- <h1>あなたにおすすめ</h1> -->
+
+<script>
+    function submitFindForm() {
+        form = document.querySelector("#find-form");
+        query = document.querySelector("#query-area").value;
+        form.action = "{% url 'recipeApp:find-result' %}?q=" + query;
+        form.submit();
+    }
+</script>
 {% endblock %}

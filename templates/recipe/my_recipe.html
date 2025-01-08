@@ -19,13 +19,20 @@
     </div>
 </div>
 <div class="titles">
+    {% if not deleted %}
     <h1>マイレシピ</h1>
     <a href="{% url 'recipeApp:create' %}" class="btn btn-primary new">新規</a>
+    {% else %}
+    <h1>削除したレシピ</h1>
+    {% endif %}
 </div>
 <ul>
     {% for recipe in recipies %}
     <li class="rounded">
-        <a href="{% url 'recipeApp:edit' %}?id={{recipe.recipe_code}}" class="py-2 pe-0 ps-3" type="link">
+        <a href="{% url 'recipeApp:edit' %}?id={{recipe.recipe_code}}" class="py-2 px-3" type="link">
+            <div class="thumbnail">
+                <img src="{{ recipe.recipe_image.url }}" alt="">
+            </div>
             <div>
                 <h2>{{ recipe.title }}</h2>
                 <p class="trans">レシピコード: {{ recipe.recipe_code }}</p>
@@ -41,24 +48,42 @@
     </li>
     {% endfor %}
 </ul>
+{% if not deleted %}
+<a id="show-deleted" href="{% url 'recipeApp:deleted' %}">
+    <img src="{% static 'images/recipe/delete.svg' %}" alt="trash">
+    <span>削除したコンテンツ</span>
+</a>
+{% else %}
+<a id="show-deleted" href="{% url 'recipeApp:my-recipe' %}">
+    <span>マイレシピ</span>
+</a>
+{% endif %}
+
 <div id="custom-context-menu" class="dropdown-menu pe-none" style="display: block; opacity: 0; top: 0;">
+    {% if not deleted %}
     <!-- <a class="dropdown-item c-pointer" tabindex="-1">名称を変更</a> -->
     <a class="dropdown-item c-pointer" tabindex="-1" href="" id="edit-button">編集</a>
-    <a class="dropdown-item c-pointer" tabindex="-1">リンクをコピー</a>
+    <a class="dropdown-item c-pointer" tabindex="-1" id="copy-button">リンクをコピー</a>
     <hr class="my-1">
     <a class="dropdown-item c-pointer" tabindex="-1" id="setting-button">設定</a>
     <hr class="my-1">
-    <a class="dropdown-item c-pointer text-danger" tabindex="-1">削除</a>
+    <a class="dropdown-item c-pointer text-danger" tabindex="-1" id="delete-button">削除</a>
+    {% else %}
+    <a class="dropdown-item c-pointer" tabindex="-1" id="delete-button">復元する</a>
+    {% endif %}
 </div>
 
 <script>
     const triggerButtons = document.querySelectorAll(".more-button");
     const contextMenu = document.getElementById("custom-context-menu");
 
+    copy_url = "";
     function ShowDropdown(currentButton, recipe_code) {
         event.preventDefault();
 
         redirect_url = `{% url 'recipeApp:edit' %}?id=${recipe_code}`;
+        copy_url = `{% url 'recipeApp:show' %}?id=${recipe_code}`;
+        delete_url  = `{% url 'recipeApp:delete' %}?id=${recipe_code}&next=` + `{% if deleted %}{% url 'recipeApp:deleted' %}{% else %}{% url 'recipeApp:my-recipe' %}{% endif %}`;
 
         // thisを使用してクリックされたボタンの位置を取得
         const rect = currentButton.getBoundingClientRect();
@@ -72,8 +97,12 @@
         });
         contextMenu.className = "dropdown-menu";
         // リンクを設定
+        "{% if not deleted %}"
         document.querySelector("#edit-button").href = redirect_url;
         document.querySelector("#setting-button").setAttribute("onclick", `ShowSetting('${recipe_code}')`);
+        "{% endif %}"
+        document.querySelector("#copy-button").onclick = CopyLink;
+        document.querySelector("#delete-button").href = delete_url;
         // メニューを表示
         contextMenu.style.opacity = "1";
     }
@@ -95,8 +124,9 @@
         }
     });
 
-    function CopyLink(link) {
-        navigator.clipboard.writeText(link);
+    function CopyLink() {
+        navigator.clipboard.writeText(copy_url);
+        HideDropdown();
     }
 
     setting_overlays = document.getElementById("setting-overlays");

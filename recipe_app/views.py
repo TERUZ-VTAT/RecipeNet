@@ -4,16 +4,17 @@ from django.http import HttpRequest, HttpResponseBadRequest, HttpResponseForbidd
 from numerize.numerize import numerize
 from django.urls import reverse
 from urllib.parse import urlencode, urlparse
+from django.utils import timezone
 import string
 import random
 from .models import Recipe, RecipeSection, IngredientsSection, Favorites
-from .forms import SettingForm
+from .forms import SettingForm, ThumbnailForm
 
 # Create your views here.
 
 
 def __saveRecipe(request: HttpRequest, recipe_code=None):
-    print(request.POST)
+    print(request.FILES)
     # 料理名, 説明を取得
     title = request.POST["title"]
     detail = request.POST["detail"]
@@ -39,8 +40,6 @@ def __saveRecipe(request: HttpRequest, recipe_code=None):
         )
     )
     # 整形したデータを元に保存
-    print("==")
-    print(detail)
     # レシピ本体の保存
     if recipe_code == None:  # ID未指定の場合の新規レシピ登録
         while True:
@@ -94,7 +93,7 @@ def __saveRecipe(request: HttpRequest, recipe_code=None):
 
 
 def index(request):
-    return render(request, "index.html")
+    return render(request, "top.html")
 
 
 @login_required
@@ -110,7 +109,18 @@ def create(request: HttpRequest):
 @login_required
 def edit(request: HttpRequest):
     recipe_code: str = request.GET.get("id", None)
+    recipe = get_object_or_404(Recipe, recipe_code=recipe_code)
+    thumbnail_form = ThumbnailForm(instance=recipe)
     if request.method == "POST":
+        thumbnail_form = ThumbnailForm(
+            request.POST,
+            request.FILES,
+            instance=recipe
+        )
+        print(request.POST)
+        if thumbnail_form.is_valid():
+            thumbnail_form.save()
+            print("SAVED")
         __saveRecipe(request, recipe_code)
     recipe = get_object_or_404(Recipe, recipe_code=recipe_code)
     ingredients = list(IngredientsSection.objects.values_list(
@@ -120,21 +130,27 @@ def edit(request: HttpRequest):
     sections = list(RecipeSection.objects.values_list(
         'detail'
     ).filter(recipe=recipe))
-    print(ingredients)
-    print(sections)
-    return render(request, "recipe/create_edit.html", {"title": recipe.title, "detail": recipe.detail, "ingredients": ingredients, "sections": sections})
+    return render(request, "recipe/create_edit.html", {"recipe": recipe, "title": recipe.title, "detail": recipe.detail, "ingredients": ingredients, "sections": sections, "thumbnail_form": thumbnail_form})
 
 
 @login_required
 def myRecipe(request: HttpRequest):
-    my_recipies = Recipe.objects.filter(user=request.user)
-    return render(request, "recipe/my_recipe.html", {"recipies": my_recipies})
+    my_recipies = Recipe.objects.filter(user=request.user, deleted=False)
+    return render(request, "recipe/my_recipe.html", {"deleted": False, "recipies": my_recipies})
+
+
+@login_required
+def deletedRecipe(request: HttpRequest):
+    deleted_recipies = Recipe.objects.filter(user=request.user, deleted=True)
+    return render(request, "recipe/my_recipe.html", {"deleted": True, "recipies": deleted_recipies})
 
 
 @login_required
 def setting(request: HttpRequest):
     recipe_code: str = request.GET.get("id", None)
     recipe = get_object_or_404(Recipe, recipe_code=recipe_code)
+    if recipe.user != request.user:
+        HttpResponseForbidden("権限が不足しています。")
     if request.method == 'POST':
         form = SettingForm(request.POST, instance=recipe)
         if form.is_valid():
@@ -145,8 +161,8 @@ def setting(request: HttpRequest):
 
 
 def findRecipe(request: HttpRequest):
-    top = Recipe.objects.order_by("-favorite_count")[:10]
-    new = Recipe.objects.order_by("-created_at")[:10]
+    top = Recipe.objects.filter(deleted=False).order_by("-favorite_count")[:10]
+    new = Recipe.objects.filter(deleted=False).order_by("-created_at")[:10]
     my_favorite = []
     if not request.user.is_anonymous:
         my_favorite = [c[0] for c in Favorites.objects.values_list(
@@ -159,11 +175,13 @@ def findRecipe(request: HttpRequest):
 def showRecipe(request: HttpRequest):
     recipe_code: str = request.GET.get("id", None)
     recipe = get_object_or_404(Recipe, recipe_code=recipe_code)
+    if (recipe.user != request.user and recipe.public_level == 0) or recipe.deleted:
+        HttpResponseForbidden("権限が不足しています。")
     recipeIngredients = IngredientsSection.objects.filter(recipe=recipe)
     recipeSections = RecipeSection.objects.filter(recipe=recipe)
     # 詳細情報用の変数群
     is_favorite = Favorites.objects.filter(
-        user=request.user,
+        user=request.user.id,
         recipe=recipe
     ).exists()
     favorite_count = numerize(recipe.favorite_count)
@@ -179,6 +197,8 @@ def favoriteRecipe(request: HttpRequest):
     recipe_code: str = request.GET.get("id", None)
     if request.method == "POST":
         recipe = get_object_or_404(Recipe, recipe_code=recipe_code)
+        if (recipe.user != request.user and recipe.public_level == 0) or recipe.deleted:
+            HttpResponseForbidden("権限が不足しています。")
         try:
             Favorites.objects.get(
                 user=request.user,
@@ -194,3 +214,30 @@ def favoriteRecipe(request: HttpRequest):
             recipe.favorite_count += 1
             recipe.save()
     return redirect(next_url, permanent=False)
+
+
+@login_required
+def deleteRecipe(request: HttpRequest):
+    recipe_code: str = request.GET.get("id", None)
+    next_url = request.GET.get('next', '/')
+    recipe = get_object_or_404(Recipe, recipe_code=recipe_code)
+    if recipe.user != request.user:
+        HttpResponseForbidden("権限が不足しています。")
+    recipe.deleted = not recipe.deleted
+    recipe.public_level = 0
+    recipe.save()
+    return redirect(next_url, permanent=False)
+
+
+def findResult(request: HttpRequest):
+    query = request.GET.get('q')
+    if query:
+        result = Recipe.objects.filter(title__icontains=query)  # 部分一致で検索
+    else:
+        return redirect("recipeApp:index", permanent=False)
+    my_favorite = []
+    if not request.user.is_anonymous:
+        my_favorite = [c[0] for c in Favorites.objects.values_list(
+            'recipe'
+        ).filter(user=request.user)]
+    return render(request, "recipe/find_result.html", {"result": result, "query": query, "my_favorite": my_favorite})

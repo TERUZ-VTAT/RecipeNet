@@ -8,7 +8,20 @@
 {% block title %}レシピ投稿{% endblock %}
 
 {% block content %}
-<form action="" method="post" name="mainForm">
+{% if thumbnail_form.errors %}
+    <ul>
+        {% for field, errors in thumbnail_form.errors.items %}
+            <li>{{ field }}:
+                <ul>
+                    {% for error in errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            </li>
+        {% endfor %}
+    </ul>
+{% endif %}
+<form action="" method="post" name="mainForm" enctype="multipart/form-data" >
     {% csrf_token %}
     <div class="d-flex">
         <!-- <h1 class="fs-1">レシピを作成</h1> -->
@@ -21,6 +34,8 @@
         </div>
     </div>
     <hr>
+    <img src="{{ recipe.recipe_image.url }}" alt="thumbnail-image" class="thumbnail" id="thumbnail-preview">
+    <input type="file" accept="image/*" class="file-select" name="{{ thumbnail_form.recipe_image.name }}" id="{{ thumbnail_form.recipe_image.id_for_label }}" onchange="ActivateSaveButton()">
     <h3>概要</h3>
     <textarea name="detail" id="id_detail" class="detail" placeholder="概要を入力...
     例: 料理の説明, 使用器具, 予想調理時間など" onkeydown="ActivateSaveButton()">{{ detail }}</textarea>
@@ -157,5 +172,16 @@
         window.onbeforeunload = null;
         form.submit()
     }
+
+    document.getElementById('{{ thumbnail_form.recipe_image.id_for_label }}').addEventListener('change', function(event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('thumbnail-preview').src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+    });
 </script>
 {% endblock %}

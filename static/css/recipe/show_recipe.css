@@ -98,7 +98,7 @@
 .section {
     font-size: 2rem;
     border-radius: 1rem;
-    background-color: rgb(240, 240, 240);
+    background-color: var(--body-bg-color);
     display: flex;
     align-items: center;
     transition: all 0.2s;
@@ -127,4 +127,26 @@
 .section:hover {
     background-color: lightgray;
     cursor: pointer;
+}
+
+#recipe-detail {
+    width: 100%;
+    height: fit-content;
+    overflow: visible;
+}
+
+#recipe-detail {
+    font-size: 2rem;
+    border-radius: 1rem;
+    background-color: var(--body-bg-color);
+    display: flex;
+    align-items: center;
+    transition: all 0.2s;
+    padding: 1rem;
+    padding-left: 2rem;
+    padding-right: 2rem;
+}
+
+#recipe-detail p {
+    margin: 0;
 }

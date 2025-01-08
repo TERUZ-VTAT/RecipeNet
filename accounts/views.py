@@ -3,7 +3,7 @@ from django.contrib.auth import login, authenticate
 from django.views.generic import TemplateView, CreateView
 from django.contrib.auth.views import LoginView as BaseLoginView, LogoutView as BaseLogoutView
 from django.urls import reverse_lazy
-from .forms import SignUpForm, SigninFrom, EditProfileForm
+from .forms import SignUpForm, LoginFrom, EditProfileForm
 from .models import User
 from recipe_app.models import Recipe, Favorites
 from django.http import HttpResponse, HttpRequest
@@ -27,9 +27,9 @@ class SignupView(CreateView):
         return response
 
 
-class SigninView(BaseLoginView):
-    form_class = SigninFrom
-    template_name = "accounts/signin.html"
+class LoginView(BaseLoginView):
+    form_class = LoginFrom
+    template_name = "accounts/login.html"
 
 
 class LogoutView(BaseLogoutView):
@@ -57,7 +57,6 @@ def editProfile(request: HttpRequest):
             request.FILES,
             instance=request.user
         )
-        print(form.is_valid())
         if form.is_valid():
             form.save()
     return render(request, "accounts/profile_edit.html", {"form": form})

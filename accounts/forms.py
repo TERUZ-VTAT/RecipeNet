@@ -16,7 +16,7 @@ class SignUpForm(UserCreationForm):
         )
 
 
-class SigninFrom(AuthenticationForm):
+class LoginFrom(AuthenticationForm):
     class Meta:
         model = User
 
@@ -31,7 +31,6 @@ class EditProfileForm(forms.ModelForm):
         )
 
     def clean_avatar(self):
-        print("called")
         uploaded_file = self.cleaned_data['avatar']
         mime_type, encoding = mimetypes.guess_type(uploaded_file.name)
         if mime_type not in ['image/svg+xml', 'image/webp', 'image/png', 'image/jpeg', 'image/gif']:

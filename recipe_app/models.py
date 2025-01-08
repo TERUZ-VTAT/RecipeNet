@@ -54,6 +54,10 @@ class Recipe(models.Model):
         verbose_name=_("updateded_at"),
         auto_now=True
     )
+    deleted = models.BooleanField(
+        verbose_name=_("deleted"),
+        default=False
+    )
 
 
 class RecipeSection(models.Model):

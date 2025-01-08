@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block title %}検索結果{% endblock %}
+
+{% block head %}
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/recipe/find_result.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'css/card.css' %}">
+{% endblock %}
+
+{% block content %}
+<form action="" method="post" id="find-form">
+    {% csrf_token %}
+    <img src="{% static 'images/recipe/search.svg' %}" alt="">
+    <input type="text" name="q" placeholder="検索..." value="{{ query|default:'' }}" id="query-area" onkeydown="if(event.key==='Enter'){event.preventDefault(); submitFindForm();}">
+</form>
+
+{% if result %}
+<div class="cards">
+    {% for recipe in result %}
+    <div class="recipe-card">
+        <a href="{% url 'recipeApp:show' %}?id={{ recipe.recipe_code }}">
+            <div class="recipe-img">
+                <img src="{% if recipe.recipe_image %}{{ recipe.recipe_image.url }}{% else %}{% static 'images/defaults/thumbnail.png' %}{% endif %}" alt="">
+            </div>
+            <div class="recipe-detail">
+                <span class="recipe-title">{{ recipe.title }}</span>
+            </div>
+        </a>
+        <form action="{% url 'recipeApp:favorite' %}?id={{ recipe.recipe_code }}&next={% url 'recipeApp:index' %}" method="post">
+            {% csrf_token %}
+            <button class="assesments">
+                <img src="{% if recipe.id in my_favorite %}{% static 'images/recipe/favorite.svg' %}{% else %}{% static 'images/recipe/not-favorite.svg' %}{% endif %}" alt="">
+                <span>{{ recipe.favorite_count }}</span>
+            </button>
+        </form>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="not-result">
+<h3>検索結果がありません。</h3>
+<div>
+    <span>お花置いときますね(´・ω・)ノ</span>
+    <h1>💐</h1>
+</div>
+{% endif %}
+
+<script>
+    function submitFindForm() {
+        form = document.querySelector("#find-form");
+        query = document.querySelector("#query-area").value;
+        form.action = "{% url 'recipeApp:find-result' %}?q=" + query;
+        form.submit();
+    }
+</script>
+{% endblock %}

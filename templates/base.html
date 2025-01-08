@@ -11,15 +11,48 @@
     <link rel="shortcut icon" type="image/png" href="{% static 'images/favicon.ico' %}" />
     {% block head %}{% endblock %}
     <title>{% block title %}{% endblock %} - RecipeNet</title>
+
+    <script>
+        function SaveThemeColor() {
+            const colors = ['#ff7043', '#42a5f5', '#66bb6a', '#ab47bc', '#ffa726'];
+            const randomColor = colors[Math.floor(Math.random() * colors.length)];
+            localStorage.setItem("themeColor", randomColor);
+            localStorage.setItem("sectionBgColor", randomColor + '33');
+            localStorage.setItem("bodyBgColor", randomColor + '1A');
+            localStorage.setItem("menuBgColor", randomColor + 'CC'); // もう少し白っぽい色を設定
+        }
+        function LoadThemeColor() {
+            const themeColor = localStorage.getItem("themeColor");
+            const sectionBgColor = localStorage.getItem("sectionBgColor");
+            const bodyBgColor = localStorage.getItem("bodyBgColor");
+            const menuBgColor = localStorage.getItem("menuBgColor");
+            if (themeColor && sectionBgColor && bodyBgColor && menuBgColor) {
+                document.documentElement.style.setProperty('--theme-color', themeColor);
+                document.documentElement.style.setProperty('--section-bg-color', sectionBgColor);
+                document.documentElement.style.setProperty('--body-bg-color', bodyBgColor);
+                document.documentElement.style.setProperty('--menu-bg-color', menuBgColor);
+                return true;
+            }
+            return false;
+        }
+        document.addEventListener('DOMContentLoaded', function() {
+            while (true) {
+                if (LoadThemeColor()) {
+                    break;
+                }
+                SaveThemeColor();
+            }
+        });
+    </script>
 </head>
 
-<body>
+<body style="background-color: var(--body-bg-color);">
     <button class="btn btn-light rounded-circle p-2 shadow m-3 border zi-10 position-fixed" onclick="ShowMenu()">
         <img src="{% static 'images/menu.svg' %}" alt="">
     </button>
     <div id="menus">
         <div id="menu-background" onclick="HideMenu()"></div>
-        <div id="menu">
+        <div id="menu" style="background-color: var(--menu-bg-color);">
             <a class="menu-title" href="{% url 'index' %}" tabindex="-1">
                 <img src="{% static 'images/RecipeNet.png' %}" alt="">
                 <span>RecipeNet</span>
@@ -29,7 +62,7 @@
                 <a href="{% url 'index' %}" class="rounded" tabindex="-1">
                     <span>トップ</span>
                 </a>
-                <a href="{% url 'recipeApp:find' %}" class="rounded" tabindex="-1">
+                <a href="{% url 'recipeApp:index' %}" class="rounded" tabindex="-1">
                     <span>レシピを探す</span>
                 </a>
                 <a href="{% url 'recipeApp:my-recipe' %}" class="rounded" tabindex="-1">
@@ -38,7 +71,7 @@
             </div>
             <hr class="mt-auto">
             <a class="menu-profiles" href="{% if user.is_authenticated %}{% url 'accounts:profile' %}?id={{ user.account_id }}{% else %}{% url 'accounts:login' %}{% endif %}">
-                <img src="{% if user.is_authenticated %}{{ user.avatar.url }}{% else %}{% static 'images/noLoginAvatar.png' %}{% endif %}" alt="profile-image" class="menu-avatar">
+                <img src="{% if user.is_authenticated %}{{ user.avatar.url }}{% else %}{% static 'images/defaults/noLoginAvatar.png' %}{% endif %}" alt="profile-image" class="menu-avatar">
                 <span class="menu-user-name">{% if user.is_authenticated %}{{ user.account_name }}{% else %}ログイン{% endif %}</span>
             </a>
         </div>

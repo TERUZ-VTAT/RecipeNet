@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="ja">
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" type="image/png" href="{% static 'images/favicon.ico' %}" />
+    <title>トップ - RecipeNet</title>
+    <style>
+        :root {
+            --theme-color: #ff7043;
+            --section-bg-color: #ffe0b2; /* テーマに合う背景色 */
+            --body-bg-color: #fff3e0; /* テーマに合う背景色 */
+            --menu-bg-color: #ff7043CC; /* もう少し白っぽい色 */
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+        @keyframes slideIn {
+            from {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        @keyframes disappear {
+            0% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+                visibility: hidden;
+            }
+        }
+        @keyframes titleMove {
+            0% {
+                transform: translateX(-100px);
+            }
+            100% {
+                transform: translateX(0);
+            }
+        }
+        @keyframes logoAppear {
+            0% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+        @keyframes charAppear {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+        body {
+            font-family: 'Noto Sans JP', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--body-bg-color);
+            color: #333;
+            animation: fadeIn 1s ease-in-out;
+        }
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            animation: disappear 2s ease-in-out 8s forwards;
+        }
+        .overlay .content {
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+        }
+        .overlay .logo-container {
+            display: flex;
+            align-items: center;
+        }
+        .overlay .logo {
+            font-size: 48px;
+            color: var(--theme-color);
+            transform: translateX(-100px);
+            animation: titleMove 2s ease-in-out 2s forwards, disappear 2s ease-in-out 8s forwards;
+        }
+        .overlay .logo-img {
+            height: 50px;
+            margin-right: 10px;
+            opacity: 0;
+            animation: logoAppear 2s ease-in-out 4s forwards, disappear 2s ease-in-out 8s forwards;
+        }
+        .overlay .catchphrase {
+            font-size: 24px;
+            color: #333;
+            margin-top: 20px;
+            display: inline-block;
+        }
+        .overlay .catchphrase span {
+            opacity: 0;
+            animation: charAppear 0.5s forwards;
+        }
+        .overlay .catchphrase span:nth-child(1) { animation-delay: 6s; }
+        .overlay .catchphrase span:nth-child(2) { animation-delay: 6.1s; }
+        .overlay .catchphrase span:nth-child(3) { animation-delay: 6.2s; }
+        .overlay .catchphrase span:nth-child(4) { animation-delay: 6.3s; }
+        .overlay .catchphrase span:nth-child(5) { animation-delay: 6.4s; }
+        .overlay .catchphrase span:nth-child(6) { animation-delay: 6.5s; }
+        .overlay .catchphrase span:nth-child(7) { animation-delay: 6.6s; }
+        .overlay .catchphrase span:nth-child(8) { animation-delay: 6.7s; }
+        .overlay .catchphrase span:nth-child(9) { animation-delay: 6.8s; }
+        .overlay .catchphrase span:nth-child(10) { animation-delay: 6.9s; }
+        .overlay .catchphrase span:nth-child(11) { animation-delay: 7s; }
+        .overlay .catchphrase span:nth-child(12) { animation-delay: 7.1s; }
+        .overlay .catchphrase span:nth-child(13) { animation-delay: 7.2s; }
+        .overlay .catchphrase span:nth-child(14) { animation-delay: 7.3s; }
+        .overlay .catchphrase span:nth-child(15) { animation-delay: 7.4s; }
+        .overlay .catchphrase span:nth-child(16) { animation-delay: 7.5s; }
+        .overlay .catchphrase span:nth-child(17) { animation-delay: 7.6s; }
+        .overlay .catchphrase span:nth-child(18) { animation-delay: 7.7s; }
+        .overlay .catchphrase span:nth-child(19) { animation-delay: 7.8s; }
+        .overlay .catchphrase span:nth-child(20) { animation-delay: 7.9s; }
+        .overlay .catchphrase span:nth-child(21) { animation-delay: 8s; }
+        header {
+            background-color: var(--theme-color);
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            position: fixed;
+            width: calc(100% - 40px); /* 修正 */
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            animation: slideIn 1s ease-in-out;
+        }
+        header .logo {
+            display: flex;
+            align-items: center;
+        }
+        header .logo img {
+            height: 50px;
+            margin-right: 10px;
+        }
+        header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+        nav {
+            margin-left: auto;
+        }
+        nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+        }
+        nav ul li {
+            margin: 0 15px;
+        }
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+        nav ul li a:hover {
+            color: #333;
+        }
+        .hero {
+            background-image: url("{% static 'images/top/paeria.png' %}");
+            background-size: cover;
+            background-position: center;
+            text-align: center;
+            color: white;
+            padding: 100px 20px;
+            margin-top: 60px;
+            position: relative;
+            animation: fadeIn 2s ease-in-out;
+        }
+        .hero::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1;
+        }
+        .hero h2, .hero p {
+            position: relative;
+            z-index: 2;
+        }
+        .hero h2 {
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
+        .hero p {
+            font-size: 24px;
+        }
+        .section {
+            padding: 60px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            animation: fadeIn 1.5s ease-in-out;
+            background: var(--section-bg-color);
+        }
+        .section h3 {
+            margin-bottom: 40px;
+            font-size: 32px;
+            text-align: center;
+            color: var(--theme-color);
+        }
+        .feature-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+        .feature-card {
+            flex: 1;
+            min-width: 300px;
+            max-width: 400px;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+            text-align: center;
+            animation: slideIn 1s ease-in-out;
+        }
+        .feature-card:hover {
+            transform: scale(1.05);
+            border-color: var(--theme-color);
+        }
+        .feature-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+        .feature-card h4, .feature-card p {
+            padding: 20px;
+        }
+        .recipe-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        .recipe-card {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+            animation: slideIn 1s ease-in-out;
+        }
+        .recipe-card a {
+            height: 100%;
+            display: block;
+            padding: 1rem;
+        }
+        .recipe-card:hover {
+            transform: scale(1.05);
+            border-color: var(--theme-color);
+        }
+        .recipe-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+        .recipe-card h4 {
+            padding: 10px;
+            font-size: 18px;
+            margin: 0;
+        }
+        footer {
+            background: var(--theme-color);
+            color: white;
+            text-align: center;
+            padding: 20px 0;
+            margin-top: 20px;
+            animation: fadeIn 1.5s ease-in-out;
+        }
+        footer p {
+            margin: 0;
+        }
+    </style>
+    <script>
+        function SaveThemeColor() {
+            const colors = ['#ff7043', '#42a5f5', '#66bb6a', '#ab47bc', '#ffa726'];
+            const randomColor = colors[Math.floor(Math.random() * colors.length)];
+            localStorage.setItem("themeColor", randomColor);
+            localStorage.setItem("sectionBgColor", randomColor + '33');
+            localStorage.setItem("bodyBgColor", randomColor + '1A');
+            localStorage.setItem("menuBgColor", randomColor + 'CC'); // もう少し白っぽい色を設定
+        }
+        function LoadThemeColor() {
+            const themeColor = localStorage.getItem("themeColor");
+            const sectionBgColor = localStorage.getItem("sectionBgColor");
+            const bodyBgColor = localStorage.getItem("bodyBgColor");
+            const menuBgColor = localStorage.getItem("menuBgColor");
+            if (themeColor && sectionBgColor && bodyBgColor && menuBgColor) {
+                document.documentElement.style.setProperty('--theme-color', themeColor);
+                document.documentElement.style.setProperty('--section-bg-color', sectionBgColor);
+                document.documentElement.style.setProperty('--body-bg-color', bodyBgColor);
+                document.documentElement.style.setProperty('--menu-bg-color', menuBgColor);
+                return true;
+            }
+            return false;
+        }
+        document.addEventListener('DOMContentLoaded', function() {
+            SaveThemeColor();
+            LoadThemeColor();
+        });
+    </script>
+</head>
+<body>
+    <div class="overlay">
+        <div class="content">
+            <div class="logo-container">
+                <img class="logo-img" src="{% static 'images/RecipeNet.png' %}" alt="ロゴ">
+                <div class="logo">RecipeNet</div>
+            </div>
+            <div class="catchphrase">
+                <span>毎</span><span>日</span><span>の</span><span>料</span><span>理</span><span>を</span><span>楽</span><span>し</span><span>く</span><span>！</span>
+            </div>
+        </div>
+    </div>
+    <header>
+        <div class="logo">
+            <img src="{% static 'images/RecipeNet.png' %}" alt="ロゴ">
+            <h1>RecipeNet</h1>
+        </div>
+        <nav>
+            <ul>
+                <!-- <li><a href="#">ホーム</a></li> -->
+                <li><a href="{% url 'recipeApp:index' %}">レシピ一覧</a></li>
+                <li><a href="{% url 'recipeApp:create' %}">投稿する</a></li>
+                <!-- <li><a href="#">お問い合わせ</a></li> -->
+            </ul>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <h2>毎日の料理を楽しく！</h2>
+        <p>あなたのオリジナルレシピを共有しよう</p>
+    </section>
+
+    <section class="section">
+        <h3>RecipeNetの特徴</h3>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <img src="{% static 'images/top/list_alt_add.svg' %}" alt="特徴1">
+                <h4>簡単にレシピを投稿</h4>
+                <p>誰でも簡単に自分のオリジナルレシピを投稿できます。</p>
+            </div>
+            <div class="feature-card">
+                <img src="{% static 'images/top/find_in_page.svg' %}" alt="特徴2">
+                <h4>豊富なレシピ検索</h4>
+                <p>多彩な検索機能で、あなたの求めるレシピがすぐに見つかります。</p>
+            </div>
+            <div class="feature-card">
+                <img src="{% static 'images/top/chat.svg' %}" alt="特徴3">
+                <h4>コミュニティ機能</h4>
+                <p>他のユーザーとレシピを共有し、<!--コメントや-->評価を通じて交流できます。</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <h3>レシピを探す</h3>
+        <div class="recipe-grid">
+            <div class="recipe-card">
+                <a href="{% url 'recipeApp:index' %}">
+                    <img src="https://via.placeholder.com/300x200" alt="レシピ一覧">
+                    <h4>レシピ一覧を見る</h4>
+                </a>
+            </div>
+            <div class="recipe-card">
+                <a href="{% url 'recipeApp:create' %}">
+                    <img src="https://via.placeholder.com/300x200" alt="レシピ投稿">
+                    <h4>レシピを投稿する</h4>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2024 RecipeNet. All Rights Reserved.</p>
+    </footer>
+</body>
+</html>

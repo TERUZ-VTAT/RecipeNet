@@ -13,6 +13,14 @@
     height: 360px;
     overflow: hidden;
     box-shadow: lightgray 0.5rem 0.5rem 0.5rem 0px;
+    transition: transform 0.3s;
+    background-color: white;
+    border: 1px solid #ddd;
+}
+
+.recipe-card:hover {
+    transform: scale(1.05);
+    border-color: var(--theme-color);
 }
 
 .recipe-card a {
@@ -35,6 +43,7 @@
 
 .recipe-card .recipe-img img {
     width: 100%;
+    height: 100%;
     object-fit: cover;
     transition: all 0.2s;
     position: relative;
@@ -56,7 +65,7 @@
     padding: 0.5rem;
     padding-top: 0;
     position: relative;
-    background-color: whitesmoke;
+    background-color: var(--section-bg-color); /* テーマカラーを適用 */
 }
 
 .recipe-title {

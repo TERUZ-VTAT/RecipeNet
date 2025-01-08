@@ -59,3 +59,11 @@ textarea[type="text"]:focus{
     width: 80%;
     height: 15rem;
 }
+
+#thumbnail-preview {
+    width: 40%;
+    aspect-ratio: 300/252;
+    /* border: #000 solid 1px; */
+    overflow: hidden;
+    object-fit: cover;
+}

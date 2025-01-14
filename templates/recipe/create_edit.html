@@ -34,7 +34,7 @@
         </div>
     </div>
     <hr>
-    <img src="{{ recipe.recipe_image.url }}" alt="thumbnail-image" class="thumbnail" id="thumbnail-preview">
+    <img src="{% if recipe.recipe_image %}{{ recipe.recipe_image.url }}{% endif %}" alt="thumbnail-image" class="thumbnail" id="thumbnail-preview">
     <input type="file" accept="image/*" class="file-select" name="{{ thumbnail_form.recipe_image.name }}" id="{{ thumbnail_form.recipe_image.id_for_label }}" onchange="ActivateSaveButton()">
     <h3>概要</h3>
     <textarea name="detail" id="id_detail" class="detail" placeholder="概要を入力...

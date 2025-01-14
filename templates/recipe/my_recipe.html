@@ -31,7 +31,7 @@
     <li class="rounded">
         <a href="{% url 'recipeApp:edit' %}?id={{recipe.recipe_code}}" class="py-2 px-3" type="link">
             <div class="thumbnail">
-                <img src="{{ recipe.recipe_image.url }}" alt="">
+                <img src="{% if recipe.recipe_image %}{{ recipe.recipe_image.url }}{% else %}{% static 'images/defaults/thumbnail.png' %}{% endif %}" alt="">
             </div>
             <div>
                 <h2>{{ recipe.title }}</h2>

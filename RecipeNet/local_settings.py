@@ -1,1 +1,0 @@
-SECRET_KEY = '%fiyf6(-gieq&1#m%6nb)750ggaqoacth@p647237*0l0u=)c5'

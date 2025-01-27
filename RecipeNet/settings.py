@@ -24,7 +24,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = "z-i19raw89&qt9&hs1gas+8pm)$&a!x9#s&twe*-bmm5b_+=7^"
 DEBUG = False
 
-ALLOWED_HOSTS = ['recipe-net.vercel.app']
+ALLOWED_HOSTS = ['recipe-net.vercel.app', '127.0.0.1', 'localhost']
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 
 # Application definition

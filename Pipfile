@@ -8,6 +8,7 @@ django = "*"
 pillow = "*"
 django-widgets-improved = "*"
 numerize = "*"
+gunicorn = "*"
 
 [dev-packages]
 

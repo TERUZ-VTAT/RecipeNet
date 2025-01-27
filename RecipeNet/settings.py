@@ -10,7 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
-from .local_settings import *
+# from .local_settings import *
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -21,6 +21,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: don't run with debug turned on in production!
+SECRET_KEY = "z-i19raw89&qt9&hs1gas+8pm)$&a!x9#s&twe*-bmm5b_+=7^"
 DEBUG = True
 
 ALLOWED_HOSTS = ['recipe-net.vercel.app']

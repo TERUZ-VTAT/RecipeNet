@@ -23,7 +23,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: don't run with debug turned on in production!
 SECRET_KEY = "z-i19raw89&qt9&hs1gas+8pm)$&a!x9#s&twe*-bmm5b_+=7^"
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*', 'recipe-net.vercel.app',
                  '127.0.0.1', '0.0.0.0', 'localhost']
@@ -77,7 +77,7 @@ CORS_ALLOW_CREDENTIALS = True
 #     }
 # }
 
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+# STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 ROOT_URLCONF = 'RecipeNet.urls'
 
@@ -159,7 +159,7 @@ LANGUAGES = [
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-os.path.join(BASE_DIR, 'staticfiles')
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     BASE_DIR/"static",

@@ -19,6 +19,7 @@ from django.urls import path, include
 from recipe_app import views
 from django.conf import settings
 from django.conf.urls.static import static
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -26,3 +27,5 @@ urlpatterns = [
     path('', views.index, name="index"),
     path('recipe/', include("recipe_app.urls"), name="recipeApp"),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+urlpatterns += staticfiles_urlpatterns()

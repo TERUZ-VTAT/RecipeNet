@@ -12,6 +12,7 @@ gunicorn = "*"
 whitenoise = "*"
 django-cors-headers = "*"
 psycopg2-binary = "*"
+dj-static = "*"
 
 [dev-packages]
 

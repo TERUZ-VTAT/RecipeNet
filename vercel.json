@@ -2,18 +2,30 @@
   "version": 2,
   "builds": [
     {
-      "src": "manage.py",
+      "src": "RecipeNet/wsgi.py",
       "use": "@vercel/python",
       "config": {
+        "maxLambdaSize": "15mb",
         "startCommand": "gunicorn RecipeNet.wsgi:application --bind 0.0.0.0:8000",
         "buildCommand": "pip install -r requirements.txt && python manage.py collectstatic --noinput"
+      }
+    },
+    {
+      "src": "build_files.sh",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "static"
       }
     }
   ],
   "routes": [
     {
-      "src": "/(.*)",
-      "dest": "manage.py"
+      "src": "/static/(.*)",
+      "dest": "/static/$1"
+    },
+    {
+        "src": "/(.*)",
+        "dest": "RecipeNet/wsgi.py"
     }
   ]
 }

@@ -22,7 +22,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: don't run with debug turned on in production!
 SECRET_KEY = "z-i19raw89&qt9&hs1gas+8pm)$&a!x9#s&twe*-bmm5b_+=7^"
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['recipe-net.vercel.app']
 

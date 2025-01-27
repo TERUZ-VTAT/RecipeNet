@@ -16,6 +16,10 @@
       "config": {
         "distDir": "static"
       }
+    },
+    {
+      "src": "staticfiles/**/*",
+      "use": "@vercel/static"
     }
   ],
   "routes": [

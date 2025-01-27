@@ -9,6 +9,7 @@ pillow = "*"
 django-widgets-improved = "*"
 numerize = "*"
 gunicorn = "*"
+whitenoise = "*"
 
 [dev-packages]
 

@@ -16,5 +16,5 @@ from whitenoise import WhiteNoise
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'RecipeNet.settings')
 
 application = get_wsgi_application()
-application = Cling(application)
+application = WhiteNoise(application, '/static')
 app = application

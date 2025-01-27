@@ -1,0 +1,45 @@
+#find-form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    right: 0;
+    overflow: hidden;
+    margin-right: 3rem;
+    font-size: 1.5rem;
+    border-radius: 3rem;
+    background-color: var(--section-bg-color); /* テーマカラーを適用 */
+    padding: 0.8rem;
+    transition: all 0.3s;
+}
+
+#find-form input {
+    width: 20rem;
+    border: none;
+    border-style: none;
+    outline-width: 0;
+    background-color: transparent;
+}
+
+.not-result {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    pointer-events: none;
+}
+
+.not-result div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.not-result div h1 {
+    margin: 0;
+}

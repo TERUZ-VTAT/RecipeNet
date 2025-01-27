@@ -1,0 +1,62 @@
+.top {
+    display: flex;
+    align-items: center;
+}
+
+.names {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    margin-left: 2rem;
+}
+
+.profile-img {
+    width: 5rem;
+    height: 5rem;
+    border-radius: 50%;
+    background-color: white;
+    box-shadow: lightgray 0.2rem 0.2rem 0.8rem 0px;
+}
+
+#account-name {
+    font-size: 4rem;
+    line-height: 4rem;
+    font-weight: bold;
+}
+
+#account-id {
+    color: gray;
+    line-height: normal;
+    font-weight: bold;
+}
+
+.middle {
+    font-size: 2rem;
+}
+
+.edit-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 4rem;
+    height: 4rem;
+    margin-left: auto;
+    padding: 1rem;
+    border-radius: 50%;
+    transition: all 0.1s;
+}
+
+.edit-button img {
+    width: 1.8rem;
+    height: 1.8rem;
+    pointer-events: none;
+}
+
+.edit-button:hover {
+    background-color: lightgray;
+    cursor: pointer;
+}
+
+.edit-button:active {
+    background-color: darkgray;
+}

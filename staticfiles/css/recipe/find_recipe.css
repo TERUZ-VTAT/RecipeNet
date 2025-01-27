@@ -1,0 +1,30 @@
+#find-form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    right: 0;
+    overflow: hidden;
+    margin-right: 3rem;
+    font-size: 1.5rem;
+    border-radius: 3rem;
+    background-color: var(--section-bg-color); /* テーマカラーを適用 */
+    padding: 0.8rem;
+    transition: all 0.3s;
+}
+
+#find-form input {
+    width: 20rem;
+    border: none;
+    border-style: none;
+    outline-width: 0;
+    background-color: transparent;
+}
+
+.theme-color {
+    color: var(--theme-color);
+}
+
+#top {
+    margin-top: 2rem;
+}

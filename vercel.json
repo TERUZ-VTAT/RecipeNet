@@ -1,5 +1,8 @@
 {
   "version": 2,
+  "regions": [
+    "hnd1"
+  ],
   "builds": [
     {
       "src": "RecipeNet/wsgi.py",
@@ -23,6 +26,10 @@
     }
   ],
   "routes": [
+    {
+      "src": "/static/(.*)",
+      "dest": "/static/$1"
+    },
     {
       "src": "/staticfiles/(.*)",
       "dest": "/staticfiles/$1"

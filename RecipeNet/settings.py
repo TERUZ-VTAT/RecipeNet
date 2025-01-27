@@ -33,6 +33,7 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 # Application definition
 
 INSTALLED_APPS = [
+    'corsheaders',
     "widget_tweaks",
     'django.contrib.admin',
     'django.contrib.auth',
@@ -48,6 +49,7 @@ INSTALLED_APPS = [
 AUTH_USER_MODEL = "accounts.User"
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -58,6 +60,16 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+# CORS_ORIGIN_WHITELIST = [
+#     # '*',
+#     'raw.githubusercontent.com',
+#     '0.0.0.0'
+# ]
+
+CORS_ALLOW_ALL_ORIGINS = True
+
+CORS_ALLOW_CREDENTIALS = True
 
 # STORAGES = {
 #     'staticfiles': {
@@ -94,8 +106,12 @@ WSGI_APPLICATION = 'RecipeNet.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR/"db.sqlite3",
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'postgres',
+        'USER': 'postgres.mbqiiurarzdvnmrawsht',
+        'PASSWORD': 'wH9F9NgjnAi0nuA7',
+        'HOST': 'aws-0-us-west-1.pooler.supabase.com',
+        'PORT': '5432',
     }
 }
 
@@ -144,8 +160,11 @@ LANGUAGES = [
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 os.path.join(BASE_DIR, 'staticfiles')
-STATIC_URL = 'https://raw.githubusercontent.com/TERUZ-VTAT/RecipeNet/develop/staticfiles/'
-STATICFILES_DIRS = [BASE_DIR/"static"]
+STATIC_URL = '/static/'
+STATICFILES_DIRS = [
+    BASE_DIR/"static",
+    'https://raw.githubusercontent.com/TERUZ-VTAT/RecipeNet/develop/staticfiles/'
+]
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR/"media"

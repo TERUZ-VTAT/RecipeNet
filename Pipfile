@@ -10,6 +10,8 @@ django-widgets-improved = "*"
 numerize = "*"
 gunicorn = "*"
 whitenoise = "*"
+psycopg2 = "*"
+django-cors-headers = "*"
 
 [dev-packages]
 

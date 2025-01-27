@@ -59,6 +59,12 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+# STORAGES = {
+#     'staticfiles': {
+#         "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+#     }
+# }
+
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 ROOT_URLCONF = 'RecipeNet.urls'
@@ -133,7 +139,7 @@ LANGUAGES = [
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 os.path.join(BASE_DIR, 'staticfiles')
-STATIC_URL = '/static/'
+STATIC_URL = 'https://raw.githubusercontent.com/TERUZ-VTAT/RecipeNet/develop/staticfiles/'
 STATICFILES_DIRS = [BASE_DIR/"static"]
 
 MEDIA_URL = '/media/'

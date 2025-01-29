@@ -11,7 +11,7 @@ from .models import Recipe, RecipeSection, IngredientsSection, Favorites
 from .forms import SettingForm, ThumbnailForm
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from cloudinary.uploader import upload
+# from cloudinary.uploader import upload
 
 # Create your views here.
 
@@ -19,8 +19,8 @@ from cloudinary.uploader import upload
 class FileUploadView(APIView):
     def post(self, request, *args, **kwargs):
         file = request.FILES['file']
-        upload_response = upload(file)
-        return Response({"url": upload_response['url']})
+        # upload_response = upload(file)
+        # return Response({"url": upload_response['url']})
 
 
 def __saveRecipe(request: HttpRequest, recipe_code=None):

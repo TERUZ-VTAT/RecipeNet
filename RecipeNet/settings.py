@@ -77,7 +77,13 @@ CORS_ALLOW_CREDENTIALS = True
 #     }
 # }
 
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': "Untitled",
+    'API_KEY': "144671436334465",
+    'API_SECRET': "NfnZ-p1baWukdr4fBMHjniiMtAM",
+}
+
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 ROOT_URLCONF = 'RecipeNet.urls'
 

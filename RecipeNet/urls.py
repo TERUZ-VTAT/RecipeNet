@@ -26,6 +26,8 @@ urlpatterns = [
     path('accounts/', include("accounts.urls"), name="accounts"),
     path('', views.index, name="index"),
     path('recipe/', include("recipe_app.urls"), name="recipeApp"),
+    path('api/', include('recipe_app.urls')),
+    path('upload/', views.FileUploadView.as_view(), name='file_upload'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 urlpatterns += staticfiles_urlpatterns()
